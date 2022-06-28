@@ -16,13 +16,13 @@ class App{
      * 定义路由
      * path 路径
      * route 路由
-     * strict 是否严格，默认严格
      */
-    static function use($path,$route,$strict=true){
+    static function use($path,$route){
         if($path===null){
             require_once $route;
             exit();
         }
+
         if(Config['DE_BUG']){
             if(!file_exists($route)){
                 error(404,'路由：'.$path.'  路由文件：'.$route.' 不存在');
@@ -31,8 +31,10 @@ class App{
 
         $uriV2 = $_SERVER['REQUEST_URI'];
         $uri = $uriV2;
+//        $uri = $uriV2.'/';
         if(stripos(strrev($uriV2),'/')){//颠倒过来好判断 //未发现/结尾，加上
             $uri = $uriV2.'/';
+
         }
         $pathV2 = $path;
         if(stripos(strrev($path),'/')){//颠倒过来好判断 //未发现/结尾，加上
@@ -41,6 +43,14 @@ class App{
         if($pathV2===''){
             $pathV2 = "/";
         }
+        //判断是否是系统级别路由
+        foreach(Config['SYSTEM_ROUTES'] as $items){
+            if($items===$pathV2){
+                error(404,'路由：'.$path.'  是系统级别路由，不可声明，请更换');
+                break;
+            }
+        }
+
         if($uri===$pathV2){//根路由
             require_once $route;
             require_once __webSite__ . 'bin\Request.php';
@@ -48,7 +58,50 @@ class App{
             $index = new Index();
             $index->start($requests);
             exit();
-        }else{//判断是否子目录运行
+        }else{//判断是否子目录运行,或路由不匹配或系统路由
+            //判断是否是系统级别路由
+            //获取第一个与第二个query
+            $arr_query = explode('/',$uri);
+            array_splice($arr_query,0,1);
+            array_splice($arr_query,count($arr_query)-1,1);
+            if(count($arr_query)>=3){
+                //session_start();
+                $first_query = $arr_query[0];
+                $second_query = $arr_query[1]; //也是now_user_strict_session
+                //$YM_Class = new YM_Class();
+                //$new_user_strict_session = $YM_Class->getRandom();
+                $user_strict_session = $_SESSION['user_strict_session'];
+                foreach(Config['SYSTEM_ROUTES'] as $items){
+                    if($items===$first_query){//是系统路由
+                        if($user_strict_session-$second_query>=0 && $user_strict_session-$second_query<=800){//能匹配session
+                            //刷新session
+                            unset($_SESSION['user_strict_session']);
+                            //$_SESSION['user_strict_session'] = $new_user_strict_session;
+                            $arr_query2 = $arr_query;
+                            array_splice($arr_query2,0,2);
+                            $file = __public__.$first_query.'\\'.implode("/",$arr_query2);
+
+                            if(!file_exists($file)){
+                                error(404,'静态文件不存在');
+                            }
+                            $msg = file_get_contents($file);
+                            print_r($msg);
+                            exit();
+                        }else{
+                            //刷新session
+                            unset($_SESSION['user_strict_session']);
+                            error(404,"静态文件非法");
+                        }
+                        break;
+                    }
+                }
+                //session_destroy();
+            }
+
+            //$now_user_strict_session = $YM_Class->txt_zhong($uri,"");
+
+
+
             //有bug，不是子目录运行也会出现，只要目录与此项目名称对即可
 //            $urilen = strlen($uri);
 //            $pathlen = strlen($pathV2);

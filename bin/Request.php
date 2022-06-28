@@ -24,6 +24,19 @@ class YM_request{
         $_GET     && $this->SafeFilter($_GET);
         return $_GET[$name];
     }
+    public function query($name){
+        $uriV2 = $_SERVER['REQUEST_URI'];
+        $uri = $uriV2;
+//        $uri = $uriV2.'/';
+        if(stripos(strrev($uriV2),'/')){//颠倒过来好判断 //未发现/结尾，加上
+            $uri = $uriV2.'/';
+
+        }
+        $arr_query = explode('/',$uri);
+        array_splice($arr_query,0,1);
+        array_splice($arr_query,count($arr_query)-1,1);
+        return $arr_query;
+    }
     public function request($name){
         return $_REQUEST[$name];
     }
@@ -59,7 +72,7 @@ class YM_request{
     }
     public function render(string $path,array $options){
         $msg = file_get_contents($path);
-        $msg = $this->myTrim($msg);
+//        $msg = $this->myTrim($msg);
         foreach ($options as $key => $value){
             $msg = str_replace('{{'.$key.'}}',$value,$msg);
         }
@@ -69,6 +82,8 @@ class YM_request{
         foreach (Config['PUBLIC_VARIABLE'] as $key => $value){
             $msg = str_replace('{{'.$key.'}}',$value,$msg);
         }
+        //替换静态文件变量
+        $msg = str_replace('{{__stylesheets__}}',__stylesheets__,$msg);
         print_r($msg);
     }
     public function header_cookies(): array

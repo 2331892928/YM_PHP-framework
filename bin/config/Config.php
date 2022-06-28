@@ -17,10 +17,12 @@ return [
         '__routes__'=>__webSite__.'routes',
         '__views__'=>__webSite__.'views',
         '__public__'=>__webSite__.'public' . '\\',
-        '__images__'=>__webSite__.'public' . '\\images',
         '__includes__'=>__webSite__.'public' . '\\includes',
-        '__javascripts__'=>__webSite__.'public' . '\\javascripts',
-        '__stylesheets__'=>__webSite__.'public' . '\\stylesheets',
+    ],
+    'SYSTEM_ROUTES'=>[
+        'stylesheets',
+        'javascripts',
+        'images'
     ],
     'DEV'=>'0.1'
 ];

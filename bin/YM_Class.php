@@ -120,7 +120,7 @@ class YM_Class
         }
     }
 
-    function RSA_GMI($data, $key, $t = 0)
+    public function RSA_GMI($data, $key, $t = 0)
     {//RSA公钥加解密
         require_once __webSite__.'bin/Rsa.php';//引入RSA加解密类
         if ($t == 0) {
@@ -131,7 +131,7 @@ class YM_Class
         return $mi_data;
     }
 
-    function RSA_SMI($data, $key, $t = 0)
+    public function RSA_SMI($data, $key, $t = 0)
     {//RSA私钥加解密
         require_once __webSite__.'bin/Rsa.php';//引入RSA加解密类
         if ($t == 0) {
@@ -140,6 +140,23 @@ class YM_Class
             $mi_data = Rsa::privateDecrypt($data, $key);//使用私钥将数据解密
         }
         return $mi_data;
+    }
+    public function getRandom($number=32): string
+    {
+        $str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+        $key  =  "" ;
+        for ( $i =0; $i < $number ; $i ++) {
+            $key  .=  $str{mt_rand(0,32)};
+        }
+        return $key ;
+    }
+    public function getMillisecond(): float
+    {
+
+        list($t1, $t2) = explode(' ', microtime());
+
+        return (float)sprintf('%.0f',(floatval($t1)+floatval($t2))*1000);
+
     }
 
     private function mi_rc4_encode($str, $turn = 0)
