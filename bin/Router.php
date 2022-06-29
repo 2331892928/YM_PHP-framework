@@ -73,9 +73,11 @@ class App{
                 $user_strict_session = $_SESSION['user_strict_session'];
                 foreach(Config['SYSTEM_ROUTES'] as $items){
                     if($items===$first_query){//是系统路由
-                        if($user_strict_session-$second_query>=0 && $user_strict_session-$second_query<=800){//能匹配session
+                        //防止特殊情况晚一秒，一般是同时，同一秒
+                        if($user_strict_session===$second_query || md5('ym-php-framework'.(time()+1).'ym-php-framework')===$second_query){//能匹配session
                             //刷新session
                             unset($_SESSION['user_strict_session']);
+                            session_destroy();
                             //$_SESSION['user_strict_session'] = $new_user_strict_session;
                             $arr_query2 = $arr_query;
                             array_splice($arr_query2,0,2);
@@ -90,6 +92,7 @@ class App{
                         }else{
                             //刷新session
                             unset($_SESSION['user_strict_session']);
+                            session_destroy();
                             error(404,"静态文件非法");
                         }
                         break;

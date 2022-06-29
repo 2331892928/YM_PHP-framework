@@ -25,11 +25,10 @@ require_once __webSite__.'bin/Router.php';
 require_once __webSite__.'bin/Map.php';
 require_once __webSite__.'bin/db.class.php';
 require_once __webSite__.'bin/YM_Class.php';
-$YM_Class = new YM_Class();
+//$YM_Class = new YM_Class();
 session_start();
-$_SESSION['user_strict_session'] = $YM_Class->getMillisecond();
+$_SESSION['user_strict_session'] = md5('ym-php-framework'.time().'ym-php-framework');
 $host = '//'.$_SERVER['HTTP_HOST'].':'.$_SERVER["SERVER_PORT"];
 define("__stylesheets__", $host.'/stylesheets/'.$_SESSION['user_strict_session'].'/');
 define("__javascripts__", $host.'/stylesheets/'.$_SESSION['user_strict_session'].'/');
 define("__images__", $host.'/stylesheets/'.$_SESSION['user_strict_session'].'/');
-
