@@ -24,5 +24,5 @@ return [
         'javascripts',
         'images'
     ],
-    'DEV'=>'0.1'
+    'DEV'=>'0.2'
 ];
