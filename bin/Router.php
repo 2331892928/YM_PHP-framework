@@ -44,11 +44,14 @@ class App{
             $pathV2 = "/";
         }
         //判断是否是系统级别路由
-        foreach(Config['SYSTEM_ROUTES'] as $items){
-            if($items===$pathV2){
-                error(404,'路由：'.$path.'  是系统级别路由，不可声明，请更换');
-                break;
-            }
+//        foreach(Config['SYSTEM_ROUTES'] as $items){
+//            if($items===$pathV2){
+//                error(404,'路由：'.$path.'  是系统级别路由，不可声明，请更换');
+//                break;
+//            }
+//        }
+        if(in_array($pathV2,Config['SYSTEM_ROUTES'])){
+            error(404,'路由：'.$path.'  是系统级别路由，不可声明，请更换');
         }
 
         if($uri===$pathV2){//根路由
@@ -71,33 +74,37 @@ class App{
                 //$YM_Class = new YM_Class();
                 //$new_user_strict_session = $YM_Class->getRandom();
                 $user_strict_session = $_SESSION['user_strict_session'];
-                foreach(Config['SYSTEM_ROUTES'] as $items){
-                    if($items===$first_query){//是系统路由
-                        //防止特殊情况晚一秒，一般是同时，同一秒
-                        if($user_strict_session===$second_query || md5('ym-php-framework'.(time()+1).'ym-php-framework')===$second_query){//能匹配session
-                            //刷新session
-                            unset($_SESSION['user_strict_session']);
-                            session_destroy();
-                            //$_SESSION['user_strict_session'] = $new_user_strict_session;
-                            $arr_query2 = $arr_query;
-                            array_splice($arr_query2,0,2);
-                            $file = __public__.$first_query.'\\'.implode("/",$arr_query2);
+                //是系统路由
+                if(in_array($first_query,Config['SYSTEM_ROUTES'])){
+                    //防止特殊情况晚一秒，一般是同时，同一秒
+                    if($user_strict_session===$second_query || md5('ym-php-framework'.(time()+1).'ym-php-framework')===$second_query){//能匹配session
+                        //刷新session
+                        unset($_SESSION['user_strict_session']);
+                        session_destroy();
+                        //$_SESSION['user_strict_session'] = $new_user_strict_session;
+                        $arr_query2 = $arr_query;
+                        array_splice($arr_query2,0,2);
+                        $file = __public__.$first_query.'\\'.implode("/",$arr_query2);
 
-                            if(!file_exists($file)){
-                                error(404,'静态文件不存在');
-                            }
-                            $msg = file_get_contents($file);
-                            print_r($msg);
-                            exit();
-                        }else{
-                            //刷新session
-                            unset($_SESSION['user_strict_session']);
-                            session_destroy();
-                            error(404,"静态文件非法");
+                        if(!file_exists($file)){
+                            error(404,'静态文件不存在');
                         }
-                        break;
+                        $msg = file_get_contents($file);
+                        print_r($msg);
+                        exit();
+                    }else{
+                        //刷新session
+                        unset($_SESSION['user_strict_session']);
+                        session_destroy();
+                        error(404,"静态文件非法");
                     }
                 }
+//                foreach(Config['SYSTEM_ROUTES'] as $items){
+//                    if($items===$first_query){//是系统路由
+//
+//                        break;
+//                    }
+//                }
                 //session_destroy();
             }
 

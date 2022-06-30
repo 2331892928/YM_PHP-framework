@@ -18,6 +18,8 @@ require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
 //路由
 App::use('',__routes__.'/index/index.php');
+//为空则是：/
+//填写：index 则是：index,/index,/index/
 
 
 

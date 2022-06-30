@@ -24,7 +24,7 @@ class Index{
 //            $this->get($request);
 //        }else{
 ////            $this->post($request);
-//            $request->error(404,'not post');
+//            $request->error(405,'not post');
 //        }
         //文件输出示例
         $this->text($request);
