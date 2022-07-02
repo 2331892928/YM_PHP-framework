@@ -1,9 +1,4 @@
-<!--/*
- * @作者：AMEN
- * @官网：https://www.ymypay.cn/
- * @博客：https://blog.ymypay.cn/
- * 湮灭网络工作室
- */-->
+
 <?php
 /*
  * @作者：AMEN
@@ -24,7 +19,7 @@ class YM_request{
         $_GET     && $this->SafeFilter($_GET);
         return $_GET[$name];
     }
-    public function query($name){
+    public function query(){
         $uriV2 = $_SERVER['REQUEST_URI'];
         $uri = $uriV2;
 //        $uri = $uriV2.'/';
@@ -32,6 +27,8 @@ class YM_request{
             $uri = $uriV2.'/';
 
         }
+        $uri = str_replace("?","/",$uri);
+        $uri = str_replace("&","/",$uri);
         $arr_query = explode('/',$uri);
         array_splice($arr_query,0,1);
         array_splice($arr_query,count($arr_query)-1,1);
@@ -64,13 +61,30 @@ class YM_request{
     }
     public function send($msg){
         print_r($msg);
-        print_r('</br>');
     }
     public function sendFile($path){
+        if(!file_exists($path)){
+            error(404,'页面文件不存在');
+        }
         $msg = file_get_contents($path);
+        //全局变量,先替换__website
+        $msg = str_replace('{{__webSite__}}',__webSite__,$msg);
+        //再替换其他全局变量
+        foreach (Config['PUBLIC_VARIABLE'] as $key => $value){
+            $msg = str_replace('{{'.$key.'}}',$value,$msg);
+        }
+        //替换静态文件变量
+        $msg = str_replace('{{__stylesheets__}}',__stylesheets__,$msg);
+        $msg = str_replace('{{__javascripts__}}',__javascripts__,$msg);
+        $msg = str_replace('{{__images__}}',__images__,$msg);
+        $msg = str_replace('{{__fonts__}}',__fonts__,$msg);
+        $msg = str_replace('{{__data__}}',__data__,$msg);
         print_r($msg);
     }
     public function render(string $path,array $options){
+        if(!file_exists($path)){
+            error(404,'页面文件不存在');
+        }
         $msg = file_get_contents($path);
 //        $msg = $this->myTrim($msg);
         foreach ($options as $key => $value){
@@ -84,6 +98,10 @@ class YM_request{
         }
         //替换静态文件变量
         $msg = str_replace('{{__stylesheets__}}',__stylesheets__,$msg);
+        $msg = str_replace('{{__javascripts__}}',__javascripts__,$msg);
+        $msg = str_replace('{{__images__}}',__images__,$msg);
+        $msg = str_replace('{{__fonts__}}',__fonts__,$msg);
+        $msg = str_replace('{{__data__}}',__data__,$msg);
         print_r($msg);
     }
     public function header_cookies(): array
