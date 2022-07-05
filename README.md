@@ -71,3 +71,6 @@ App:use('/admin','路由路径'，false);
 > - query_get->get
 > - query->params
 > - is_get->whetherGet
+
+#项目文档链接
+> http://ym-php.rkru.cn/
