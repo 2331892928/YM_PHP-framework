@@ -43,7 +43,24 @@ class YM_request{
     }
     public function error($response_code,$result){
         http_response_code ($response_code);
-        exit($response_code.'  '.ErrorCode[$response_code].'</br>'.$result.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV']);
+        $debug = '';
+        if(Config['DE_BUG']){
+            $debug = 'Error: '.ErrorCode[$response_code].'</br>';
+            $debug_arr = debug_backtrace();
+            foreach($debug_arr as $key => $val){
+                $debug.= "&nbsp &nbsp &nbsp at ".$val['class'].$val['type'].$val['function']."&nbsp &nbsp(".$val['file'].':'. $val['line'].')</br>';
+                $details = json_encode($val['args'],JSON_UNESCAPED_UNICODE);
+                $details = str_replace("[","",$details);
+                $details = str_replace("]","",$details);
+                $details = str_replace(",","······",$details);
+                $details = strip_tags($details);
+                if($details=="{}"){
+                    continue;
+                }
+                $debug.="&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp|&nbsp &nbsp &nbsp".$details.'</br>';
+            }
+        }
+        exit('</br>'.$response_code.'  '.ErrorCode[$response_code].'</br>'.'</br>'.$result.'</br>'.'</br>'.$debug.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV']);
     }
     public function body(){
         //        $postStr = $GLOBALS['HTTP_ROW_POST_DATA'];

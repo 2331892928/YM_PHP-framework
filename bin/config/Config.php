@@ -7,7 +7,9 @@
  * 湮灭网络工作室
  */
 return [
+    //是否debug
     'DE_BUG'=>true,
+    //框架内部配置项,勿修改↓
     'PUBLIC_VARIABLE'=>[
         '__routes__'=>__webSite__.'routes',
         '__views__'=>__webSite__.'views',
@@ -22,4 +24,5 @@ return [
         'fonts',
     ],
     'DEV'=>'0.4'
+    //框架内部配置项↑
 ];
