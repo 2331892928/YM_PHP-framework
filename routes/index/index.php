@@ -15,7 +15,7 @@ class Index{
     public function start(YM_request $request){
         //通过这种方法当前请求是get还是post，这样就可以单独拦截，若post和get都接收，直接写即可
         //获取参数：$request->query_get()/body_post,已过滤xss
-//        if($request->is_get()){
+//        if($request->whetherGet()){
 //            $this->get($request);
 //        }else{
 ////            $this->post($request);
