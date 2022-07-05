@@ -89,7 +89,7 @@ class App{
 
         $flag = false;
         if(!$strict){//不严格，只匹配前缀,
-            print_r($uri);
+            //print_r($uri);
             if(gettype(stripos($uri,$pathV2))=='integer' && stripos($uri,$pathV2)==0){//匹配
                 $flag = true;
 
