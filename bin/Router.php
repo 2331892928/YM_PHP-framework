@@ -70,7 +70,11 @@ class App{
         if(in_array($first_query,Config['SYSTEM_ROUTES'])){//是系统路由
             $arr_query2 = $arr_query;
             array_splice($arr_query2, 0, 1);
-            $file = __public__ . $first_query . '\\' . implode("/", $arr_query2);
+            //把问号后边的删除，避免因为get参数而找不到文件
+            if($flag_get){
+                array_splice($arr_query,count($arr_query)-1,1);
+            }
+            $file = __public__ . implode("/", $arr_query);
             if (!file_exists($file)) {
                 error(404, '静态文件不存在');
             }

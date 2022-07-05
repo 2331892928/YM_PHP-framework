@@ -56,7 +56,7 @@ return [
 
     'woff' => 'application/x-font-woff',
     'woff2' => 'application/x-font-woff',
-    'tff' => 'application/x-font-woff',
+    'ttf' => 'application/x-font-woff',
     'atom' => 'application/atom+xml',
 
 
