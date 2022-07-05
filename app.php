@@ -12,7 +12,10 @@
 require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
 //路由
-App::use('',__routes__.'/index/index.php');
+App::use('/',__routes__.'/index/index.php');//严格示例，只能/到达路由，一般做接口
+App::use('/user',__routes__.'/index/index.php',false);
+//不严格示例，可以到达/users/xxx 路由xxx为泛，可以/users/index.html,/users/login.html,/users/index/login,通过内部$request->params()获取params参数
+
 //为空则是：/
 //填写：index 则是：index,/index,/index/
 
@@ -21,8 +24,9 @@ App::use('',__routes__.'/index/index.php');
 
 
 
-
+//禁止删除
 App::use(null,error(404,"页面不存在"));
+//禁止删除
 function error($response_code,$result){
     http_response_code ($response_code);
 

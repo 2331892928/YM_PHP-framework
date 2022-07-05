@@ -24,12 +24,3 @@ $host = '//'.$_SERVER['HTTP_HOST'].':'.$_SERVER["SERVER_PORT"];
 foreach (Config['SYSTEM_ROUTES'] as $key) {
     define('__'.$key.'__', $host.'/'.$key.'/');
 }
-//$YM_Class = new YM_Class();
-//session_start();
-//$_SESSION['user_strict_session'] = md5('ym-php-framework'.time().'ym-php-framework');
-//$host = '//'.$_SERVER['HTTP_HOST'].':'.$_SERVER["SERVER_PORT"];
-//define("__stylesheets__", $host.'/stylesheets/'.$_SESSION['user_strict_session'].'/');
-//define("__javascripts__", $host.'/javascripts/'.$_SESSION['user_strict_session'].'/');
-//define("__images__", $host.'/images/'.$_SESSION['user_strict_session'].'/');
-//define("__fonts__", $host.'/fonts/'.$_SESSION['user_strict_session'].'/');
-//define("__data__", $host.'/data/'.$_SESSION['user_strict_session'].'/');

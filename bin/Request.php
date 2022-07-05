@@ -10,51 +10,48 @@ class YM_request{
 
 
 
-    public function body_post($name){
+    public function post($name){
         $_POST    && $this->SafeFilter($_POST);
-
         return $_POST[$name];
     }
-    public function query_get($name){
+    public function get($name){
         $_GET     && $this->SafeFilter($_GET);
         return $_GET[$name];
     }
-    public function query(){
-        $uriV2 = $_SERVER['REQUEST_URI'];
-        $uri = $uriV2;
-//        $uri = $uriV2.'/';
-        if(stripos(strrev($uriV2),'/')){//颠倒过来好判断 //未发现/结尾，加上
-            $uri = $uriV2.'/';
-
-        }
+    public function params(): array
+    {
+        $uri = $_SERVER['REQUEST_URI'];
         $uri = str_replace("?","/",$uri);
         $uri = str_replace("&","/",$uri);
         $arr_query = explode('/',$uri);
         array_splice($arr_query,0,1);
-        array_splice($arr_query,count($arr_query)-1,1);
         return $arr_query;
     }
     public function request($name){
         return $_REQUEST[$name];
     }
-    public function is_get(){
+    public function whetherGet(): bool
+    {
         if($_SERVER['REQUEST_METHOD']==='GET'){
             return true;
         }
         return false;
+    }
+    public function requestType(): String
+    {
+        return $_SERVER['REQUEST_METHOD'];
     }
     public function error($response_code,$result){
         http_response_code ($response_code);
         exit($response_code.'  '.ErrorCode[$response_code].'</br>'.$result.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV']);
     }
     public function body(){
-        $postStr = file_get_contents("php://input");
-//        $postStr = $GLOBALS['HTTP_ROW_POST_DATA'];
-        return $postStr;
+        //        $postStr = $GLOBALS['HTTP_ROW_POST_DATA'];
+        return file_get_contents("php://input");
     }
     public function header(){
         $header = getallheaders();
-        if($header==false){
+        if(!$header){
             return apache_request_headers();
         }
         return $header;
@@ -79,6 +76,15 @@ class YM_request{
         $msg = str_replace('{{__images__}}',__images__,$msg);
         $msg = str_replace('{{__fonts__}}',__fonts__,$msg);
         $msg = str_replace('{{__data__}}',__data__,$msg);
+        //判断文件类型
+        $Mime = require __webSite__.'bin\config\Mime.php';
+        $fileSuffix = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $Mime_type = $Mime[$fileSuffix];
+        if($Mime_type==null){
+            error(405, '页面文件类型未知');
+        }
+        header('Content-type: '.$Mime_type);
+        ob_clean();
         print_r($msg);
     }
     public function render(string $path,array $options){
@@ -102,6 +108,15 @@ class YM_request{
         $msg = str_replace('{{__images__}}',__images__,$msg);
         $msg = str_replace('{{__fonts__}}',__fonts__,$msg);
         $msg = str_replace('{{__data__}}',__data__,$msg);
+        //判断文件类型
+        $Mime = require __webSite__.'bin\config\Mime.php';
+        $fileSuffix = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $Mime_type = $Mime[$fileSuffix];
+        if($Mime_type==null){
+            error(405, '页面文件类型未知');
+        }
+        header('Content-type: '.$Mime_type);
+        ob_clean();
         print_r($msg);
     }
     public function header_cookies(): array
@@ -202,19 +217,4 @@ class YM_request{
             }
         }
     }
-//    public function get_uri(){
-//        $uriV2 = $_SERVER['REQUEST_URI'];
-//        $uri = $uriV2;
-//        if(stripos(strrev($uriV2),'/')){//颠倒过来好判断 //未发现/结尾，加上,完整uri，
-//            $uri = $uriV2.'/';
-//        }
-//        //运行目录前边对比将完整uri，
-////        $pathV2 = $path;
-////        if(stripos(strrev($path),'/')){//颠倒过来好判断 //未发现/结尾，加上
-////            $pathV2 = $path.'/';
-////        }
-//    }
-//    public function get($path,$class,$function,YM_request $request){
-//        $class->$function($request);
-//    }
 }

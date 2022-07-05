@@ -47,5 +47,8 @@ class Index{
         //模板输出文件
         //输出不会覆盖
         $request->render(__webSite__.'views/index.html',['title'=>'示例文件','msg'=>'变量用{{}}包起来,不能有任何空白字符']);
+        //输出params参数
+        $request->send($request->params());
+
     }
 }

@@ -21,5 +21,5 @@ return [
         'data',
         'fonts',
     ],
-    'DEV'=>'0.3'
+    'DEV'=>'0.4'
 ];
