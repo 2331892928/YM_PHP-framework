@@ -78,7 +78,7 @@ class App{
             if (!file_exists($file)) {
                 error(404, '静态文件不存在');
             }
-            $Mime = require __webSite__.'bin\config\Mime.php';
+            $Mime = require __webSite__.'bin/config/Mime.php';
             $msg = file_get_contents($file);
             $fileSuffix = strtolower(pathinfo($file, PATHINFO_EXTENSION));
             $Mime_type = $Mime[$fileSuffix];
@@ -114,7 +114,7 @@ class App{
 //        print_r($pathV2);
         if($flag){//根路由
             require_once $route;
-            require_once __webSite__ . 'bin\Request.php';
+            require_once __webSite__ . 'bin/Request.php';
             $requests = new YM_request();
             $index = new Index();
             $index->start($requests);

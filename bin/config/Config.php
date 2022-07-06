@@ -13,8 +13,8 @@ return [
     'PUBLIC_VARIABLE'=>[
         '__routes__'=>__webSite__.'routes',
         '__views__'=>__webSite__.'views',
-        '__public__'=>__webSite__.'public' . '\\',
-        '__includes__'=>__webSite__.'public' . '\\includes',
+        '__public__'=>__webSite__.'public' . '/',
+        '__includes__'=>__webSite__.'public' . '/includes',
     ],
     'SYSTEM_ROUTES'=>[
         'stylesheets',

@@ -94,7 +94,7 @@ class YM_request{
         $msg = str_replace('{{__fonts__}}',__fonts__,$msg);
         $msg = str_replace('{{__data__}}',__data__,$msg);
         //判断文件类型
-        $Mime = require __webSite__.'bin\config\Mime.php';
+        $Mime = require __webSite__.'bin/config/Mime.php';
         $fileSuffix = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $Mime_type = $Mime[$fileSuffix];
         if($Mime_type==null){
@@ -126,7 +126,7 @@ class YM_request{
         $msg = str_replace('{{__fonts__}}',__fonts__,$msg);
         $msg = str_replace('{{__data__}}',__data__,$msg);
         //判断文件类型
-        $Mime = require __webSite__.'bin\config\Mime.php';
+        $Mime = require __webSite__.'bin/config/Mime.php';
         $fileSuffix = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $Mime_type = $Mime[$fileSuffix];
         if($Mime_type==null){
