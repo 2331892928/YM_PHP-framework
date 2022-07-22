@@ -77,7 +77,7 @@ class YM_Class
         return substr($str, 0, $right);
     }
 
-    public function mi_rc4($data, $pwd, $t = 0)
+    public function mi_rc4($data, $pwd, $t = 0): string
     {//t=0加密，1=解密
         $cipher = '';
         $key[] = "";

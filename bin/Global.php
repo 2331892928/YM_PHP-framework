@@ -20,7 +20,8 @@ require_once __webSite__.'bin/Router.php';
 require_once __webSite__.'bin/Map.php';
 require_once __webSite__.'bin/db.class.php';
 require_once __webSite__.'bin/YM_Class.php';
-$host = '//'.$_SERVER['HTTP_HOST'].':'.$_SERVER["SERVER_PORT"];
+//$host = '//'.$_SERVER['HTTP_HOST'].':'.$_SERVER["SERVER_PORT"];
+$host = '//'.$_SERVER['HTTP_HOST'];
 foreach (Config['SYSTEM_ROUTES'] as $key) {
     define('__'.$key.'__', $host.'/'.$key.'/');
 }
