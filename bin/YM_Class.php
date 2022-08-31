@@ -141,7 +141,7 @@ class YM_Class
         $str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
         $key  =  "" ;
         for ( $i =0; $i < $number ; $i ++) {
-            $key  .=  $str{mt_rand(0,32)};
+            $key  .=  $str[mt_rand(0,32)];
         }
         return $key ;
     }
