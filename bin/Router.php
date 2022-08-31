@@ -94,7 +94,14 @@ class App{
         $flag = false;
         if(!$strict){//不严格，只匹配前缀,
             //print_r($uri);
-            if(gettype(stripos($uri,$pathV2))=='integer' && stripos($uri,$pathV2)==0){//匹配
+//            if(gettype(stripos($uri,$pathV2))=='integer' && stripos($uri,$pathV2)==0){//匹配
+//                $flag = true;
+//
+//            }
+            $yurl = $uri."/";
+            $ypathV2 = $pathV2."/";
+            if(gettype(stripos($yurl,$ypathV2))=='integer' && stripos($yurl,$ypathV2)==0){//匹配
+
                 $flag = true;
 
             }
