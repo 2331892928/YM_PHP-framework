@@ -10,7 +10,7 @@
 
 class YM_Class
 {
-    public function send_mail($host, $port, $user, $pass, $to, $content = NULL, $title = 'YM框架邮件系统', $type = 'TXT', $debug = false)
+    public function send_mail($host, $port, $user, $pass, $to, $content = NULL, $title = 'YM框架邮件系统', $Secure=NULL,$type = 'TXT', $debug = false)
     {
         // require 'class/email/mail.php';
 //        require_once 'class/email/class.phpmailer.php';
@@ -22,35 +22,47 @@ class YM_Class
         error_reporting(E_STRICT);
         date_default_timezone_set("Asia/Shanghai");//设定时区东八区
         $mail = new PHPMailer(); //new一个PHPMailer对象出来
-        // $body             = eregi_replace("[\]",'',$content); //对邮件内容进行必要的过滤
-        $body = $content;
-        $mail->CharSet = "UTF-8";//设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
-        $mail->IsSMTP(); // 设定使用SMTP服务
-        $mail->SMTPDebug = 1;                     // 启用SMTP调试功能
-        // 1 = errors and messages
-        // 2 = messages only
-        $mail->SMTPAuth = true;                  // 启用 SMTP 验证功能
-        $mail->Host = $host;      // SMTP 服务器
-        if ($port == 465) {
-            $mail->SMTPSecure = "ssl";// 安全协议
-        }
-        $mail->Port = $port;                   // SMTP服务器的端口号
-        $mail->Username = $user;  // SMTP服务器用户名
-        $mail->Password = $pass;            // SMTP服务器密码
-        $mail->SetFrom($user, $title);
-        $mail->AddReplyTo($user, $title);
-        $mail->Subject = $title;
-        $mail->AltBody = "To view the message, please use an HTML compatible email viewer! - From www.86daigou.com"; // optional, comment out and test
-        $mail->MsgHTML($body);
-        $address = $to;
-        $mail->AddAddress($address, $to);
-        //$mail->WordWrap = 50; // set word wrap 换行字数
-        //$mail->AddAttachment("images/phpmailer.gif");      // 附件
-        //$mail->AddAttachment("images/phpmailer_mini.gif"); // 附件
-        if (!$mail->Send()) {
-            return ("Mailer Error: " . $mail->ErrorInfo);
-        } else {
-            return (1);
+        try {
+            // $body             = eregi_replace("[\]",'',$content); //对邮件内容进行必要的过滤
+            $body = $content;
+            $mail->CharSet = "UTF-8";//设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
+            $mail->IsSMTP(); // 设定使用SMTP服务
+            if($debug){
+                $mail->SMTPDebug = 1;                     // 启用SMTP调试功能
+            }else{
+                $mail->SMTPDebug = 0;
+            }
+
+            // 1 = errors and messages
+            // 2 = messages only
+            $mail->SMTPAuth = true;                  // 启用 SMTP 验证功能
+            $mail->Host = $host;      // SMTP 服务器
+            if ($port == 465) {
+                $mail->SMTPSecure = "ssl";// 安全协议
+            }
+            if($Secure!=NULL){//自定义协议
+                $mail->SMTPSecure = $Secure;// 安全协议
+            }
+            $mail->Port = $port;                   // SMTP服务器的端口号
+            $mail->Username = $user;  // SMTP服务器用户名
+            $mail->Password = $pass;            // SMTP服务器密码
+            $mail->SetFrom($user, $title);
+            $mail->AddReplyTo($user, $title);
+            $mail->Subject = $title;
+            $mail->AltBody = "To view the message, please use an HTML compatible email viewer! - From www.86daigou.com"; // optional, comment out and test
+            $mail->MsgHTML($body);
+            $address = $to;
+            $mail->AddAddress($address, $to);
+            //$mail->WordWrap = 50; // set word wrap 换行字数
+            //$mail->AddAttachment("images/phpmailer.gif");      // 附件
+            //$mail->AddAttachment("images/phpmailer_mini.gif"); // 附件
+            if (!$mail->Send()) {
+                return ("Mailer Error: " . $mail->ErrorInfo);
+            } else {
+                return (1);
+            }
+        } catch (Exception  $e) {
+            return "Mailer Error: " . $mail->ErrorInfo;
         }
 
     }
