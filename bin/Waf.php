@@ -43,7 +43,8 @@ class Waf
     public function run()
     {
         if (!$this->check()) {
-            echo $this->getAlert();
+            http_response_code (500);
+            print_r($this->getAlert());
             die;
         }
     }

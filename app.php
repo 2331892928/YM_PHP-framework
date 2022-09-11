@@ -13,9 +13,11 @@ require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
 
 //自带waf，不用可以注释，也可以自定义waf规则,推荐第二种
+//使用$waf->check()判断自己去处理时，请注意页面必须是500或其他状态码，千万不能是200
 $waf = new Waf();
 //第一种
 //if(!$waf->check()){
+//http_response_code (500);
 //    echo '非法请求';
 //    die;
 //}
@@ -35,6 +37,7 @@ $waf->run();
 //        ];
 //$waf = new Waf($rules);
 //if(!$waf->check()){
+//http_response_code (500);
 //    echo '非法请求';
 //    die;
 //}
