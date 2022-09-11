@@ -28,7 +28,11 @@ class YM_request{
 
         return $_GET[$name];
     }
-    public function params(): array
+
+    /**
+     * @return false|array
+     */
+    public function params()
     {
         $uri = $_SERVER['REQUEST_URI'];
         $uri = str_replace("?","/",$uri);
@@ -40,14 +44,22 @@ class YM_request{
     public function request($name){
         return $_REQUEST[$name];
     }
-    public function whetherGet(): bool
+
+    /**
+     * @return bool
+     */
+    public function whetherGet()
     {
         if($_SERVER['REQUEST_METHOD']==='GET'){
             return true;
         }
         return false;
     }
-    public function requestType(): String
+
+    /**
+     * @return mixed
+     */
+    public function requestType()
     {
         return $_SERVER['REQUEST_METHOD'];
     }
@@ -77,7 +89,14 @@ class YM_request{
         }
         exit('</br>'.$response_code.'  '.ErrorCode[$response_code].'</br>'.'</br>'.$result.'</br>'.'</br>'.$debug.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV']);
     }
-    public function statusPage(int $response_code,string $path,array $options=[]){
+
+    /**
+     * @param $response_code int
+     * @param $path string
+     * @param $options array
+     * @return void
+     */
+    public function statusPage($response_code,$path,$options=[]){
 
         if(!file_exists($path)){
             error(404,'页面文件不存在');
@@ -129,7 +148,13 @@ class YM_request{
         ob_clean();
         print_r($msg);
     }
-    public function render(string $path,array $options=[]){
+
+    /**
+     * @param $path string
+     * @param $options array
+     * @return void
+     */
+    public function render($path,$options=[]){
         if(!file_exists($path)){
             error(404,'页面文件不存在');
         }
@@ -161,7 +186,11 @@ class YM_request{
         ob_clean();
         print_r($msg);
     }
-    public function header_cookies(): array
+
+    /**
+     * @return array
+     */
+    public function header_cookies()
     {
         if(strcmp(PHP_VERSION,"7.4.0")==-1){
             $_COOKIE    && $this->SafeFilter($_COOKIE);
@@ -177,7 +206,11 @@ class YM_request{
         }
         return $arrs_cookies;
     }
-    public function cookies(): array
+
+    /**
+     * @return array
+     */
+    public function cookies()
     {
         if(strcmp(PHP_VERSION,"7.4.0")==-1){
             $_COOKIE    && $this->SafeFilter($_COOKIE);
@@ -201,9 +234,10 @@ class YM_request{
     }
     /**
      * 获取ipv2自定义版
-     * @param int type 类型，默认0HTTP_CLIENT_IP，1HTTP_X_FORWARDED_FOR，2REMOTE_ADDR，3REMOTE_ADDR，4自定义，需要在参数二给出
+     * @param int $type 类型，默认0HTTP_CLIENT_IP，1HTTP_X_FORWARDED_FOR，2REMOTE_ADDR，3REMOTE_ADDR，4自定义，需要在参数二给出
+     * @param string $ipServer
      */
-    public function ipV2(int $type = 0,string $ipServer=NULL){
+    public function ipV2($type = 0,$ipServer=NULL){
         switch ($type){
             case 0:
                 $ip = getenv("HTTP_CLIENT_IP");
@@ -265,7 +299,7 @@ class YM_request{
      * 获取日志
      */
     public function getLog(){
-        $debug = 'Error: '.ErrorCode[$response_code].'</br>';
+        $debug = "";
         $debug_arr = debug_backtrace();
         foreach($debug_arr as $key => $val){
             $class = array_key_exists("class",$val) ? $val['class'] : "";
@@ -284,7 +318,7 @@ class YM_request{
             }
             $debug.="&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp|&nbsp &nbsp &nbsp".$details.'</br>';
         }
-        $debug .= ErrorCode[$response_code].'</br>'.'</br>'.'</br>'.$debug.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV'];
+        $debug .= $debug.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV'];
         return $debug;
     }
     private function myTrim($str)

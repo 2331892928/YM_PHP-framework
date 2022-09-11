@@ -26,7 +26,12 @@ if(defined('SQLITE')==true){
         function fetch($q){
             return $q->fetch();
         }
-        function fetch_all($q): array
+
+        /**
+         * @param $q
+         * @return mixed
+         */
+        function fetch_all($q)
         {
             return $q->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -45,7 +50,12 @@ if(defined('SQLITE')==true){
         function query($q){
             return $this->result=$this->link->query($q);
         }
-        function multi_query($q): bool
+
+        /**
+         * @param $q
+         * @return bool
+         */
+        function multi_query($q)
         {
             $pre = $this->link->prepare($q);
             return $pre->execute();
@@ -59,7 +69,14 @@ if(defined('SQLITE')==true){
                 return $this->link->lastInsertId();
             return false;
         }
-        function update_array(string $table,array $update_array,string $where=NULL): bool
+
+        /**
+         * @param string $table
+         * @param array $update_array
+         * @param string|NULL $where
+         * @return bool
+         */
+        function update_array($table,$update_array,$where=NULL)
         {
             $q = "UPDATE `$table` SET ";
             foreach($update_array as $key => $val){
@@ -108,11 +125,21 @@ elseif(extension_loaded('mysqli') && $nomysqli==false) {
             $result = mysqli_query($this->link,$q);
             return mysqli_fetch_assoc($result);
         }
-        function fetch_all($q): array
+
+        /**
+         * @param $q
+         * @return array
+         */
+        function fetch_all($q)
         {
             return mysqli_fetch_all($q);
         }
-        function get_row_all($q): array
+
+        /**
+         * @param $q
+         * @return array
+         */
+        function get_row_all($q)
         {
             $result = mysqli_query($this->link,$q);
             return mysqli_fetch_all($result,MYSQLI_ASSOC);
@@ -125,11 +152,21 @@ elseif(extension_loaded('mysqli') && $nomysqli==false) {
         function query($q){
             return mysqli_query($this->link,$q);
         }
-        function multi_query($q): bool
+
+        /**
+         * @param $q
+         * @return bool
+         */
+        function multi_query($q)
         {
             return mysqli_multi_query($this->link,$q);
         }
-        function escape($str): string
+
+        /**
+         * @param $str
+         * @return string
+         */
+        function escape($str)
         {
             return mysqli_real_escape_string($this->link,$str);
         }
@@ -150,7 +187,14 @@ elseif(extension_loaded('mysqli') && $nomysqli==false) {
                 return mysqli_insert_id($this->link);
             return false;
         }
-        function update_array(string $table,array $update_array,string $where=NULL): bool
+
+        /**
+         * @param string $table
+         * @param array $update_array
+         * @param string|NULL $where
+         * @return bool
+         */
+        function update_array($table,$update_array,$where=NULL)
         {
             $q = "UPDATE `$table` SET ";
             foreach($update_array as $key => $val){
@@ -231,7 +275,14 @@ elseif(extension_loaded('mysqli') && $nomysqli==false) {
                 return mysql_insert_id($this->link);
             return false;
         }
-        function update_array(string $table,array $update_array,string $where=NULL): bool
+
+        /**
+         * @param string $table
+         * @param array $update_array
+         * @param string|NULL $where
+         * @return bool
+         */
+        function update_array($table,$update_array,$where=NULL)
         {
             $q = "UPDATE `$table` SET ";
             foreach($update_array as $key => $val){

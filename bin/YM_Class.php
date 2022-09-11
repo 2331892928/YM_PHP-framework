@@ -89,7 +89,7 @@ class YM_Class
         return substr($str, 0, $right);
     }
 
-    public function mi_rc4($data, $pwd, $t = 0): string
+    public function mi_rc4($data, $pwd, $t = 0)
     {//t=0加密，1=解密
         $cipher = '';
         $key[] = "";
@@ -127,6 +127,13 @@ class YM_Class
         }
     }
 
+    /**
+     * PHP 7.0以上可以用
+     * @param $data
+     * @param $key
+     * @param $t
+     * @return string
+     */
     public function RSA_GMI($data, $key, $t = 0)
     {//RSA公钥加解密
         require_once __webSite__.'bin/Rsa.php';//引入RSA加解密类
@@ -138,6 +145,13 @@ class YM_Class
         return $mi_data;
     }
 
+    /**
+     * PHP 7.0以上可以用
+     * @param $data
+     * @param $key
+     * @param $t
+     * @return string
+     */
     public function RSA_SMI($data, $key, $t = 0)
     {//RSA私钥加解密
         require_once __webSite__.'bin/Rsa.php';//引入RSA加解密类
@@ -148,7 +162,7 @@ class YM_Class
         }
         return $mi_data;
     }
-    public function getRandom($number=32): string
+    public function getRandom($number=32)
     {
         $str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
         $key  =  "" ;
@@ -157,7 +171,7 @@ class YM_Class
         }
         return $key ;
     }
-    public function getMillisecond(): float
+    public function getMillisecond()
     {
 
         list($t1, $t2) = explode(' ', microtime());

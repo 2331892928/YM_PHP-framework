@@ -11,6 +11,35 @@
 //框架比引入不可删除
 require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
+
+//自带waf，不用可以注释，也可以自定义waf规则,推荐第二种
+$waf = new Waf();
+//第一种
+//if(!$waf->check()){
+//    echo '非法请求';
+//    die;
+//}
+
+//第二种
+$waf = new Waf();
+$waf->run();
+
+//第三种
+//$rules = ['\.\./', //禁用包含 ../ 的参数
+//        ];
+//$waf = new Waf($rules);
+//$waf->run();
+
+//第四种
+//$rules = ['\.\./', //禁用包含 ../ 的参数
+//        ];
+//$waf = new Waf($rules);
+//if(!$waf->check()){
+//    echo '非法请求';
+//    die;
+//}
+//waf结束
+
 //路由,从小至大，如果根路由在最上边，且不严格，第二个路由是/admin的话，浏览器输入/admin将会被定义到跟路由
 App::use('/',__routes__.'/index/index.php');//严格示例，只能/到达路由，一般做接口
 App::use('/user',__routes__.'/index/index.php',false);

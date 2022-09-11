@@ -15,7 +15,13 @@ class Map{
         }
         return $res;
     }
-    public function put($key,$name): bool
+
+    /**
+     * @param $key
+     * @param $name
+     * @return bool
+     */
+    public function put($key,$name)
     {
         $res = $this->arr_map[$key];
         if($res==null){
