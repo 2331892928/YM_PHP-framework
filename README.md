@@ -72,5 +72,18 @@ App:use('/admin','路由路径'，false);
 > - query->params
 > - is_get->whetherGet
 
+> 0.5 | 2022年7月22日:
+> - 解决当有端口号运行时，导致静态文件指向错误
+> - 优化数据库类，新增：multi_query,update_array,insert_array,get_row_all。优化sqlite数据库连接方式
+> - rsa加密解密优化，解决密钥长度问题，自动获取密钥长度
+
+
+> 0.6 | 2022年9月11日:
+> - 适配PHP8.0和PHP8.1，其余暂未测试
+> - 解决PHP7.4以上参数净化出错BUG
+> - 增加获取IP自定义请查看文档使用方法 YM_request->ipV2(int $type,string $zdy=NULL)
+> - 增加自定义错误页面YM_request->statusPage(int $response_code,string $path,array $options=[])
+> - 增加获取当前日志YM_request->getLog()
+
 #项目文档链接
 > http://ym-php.rkru.cn/
