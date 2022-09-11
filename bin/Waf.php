@@ -121,7 +121,7 @@ class Waf
 </head>
 <body>
     <div class="wrapper">
-        <h1>网站防火墙</h1>
+        <h1>YM-PHP框架</h1><h1>网站防火墙</h1>
         <p>系统已拦截本次请求</p>
         <p>可能的原因是本次请求带有不合法数据</p>
         <p>您的IP:<b>【{ip}】</b>已被记录</p>
