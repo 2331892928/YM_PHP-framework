@@ -22,7 +22,8 @@ class Index{
 //            $request->error(405,'not post');
 //        }
         //文件输出示例
-        $this->text($request);
+        $request -> statusPage(404,"F:/phpProjects/YM_PHP-framework/views/404.html");
+//        $this->text($request);
         //更多帮助请查看：https://ym-php.rkru.cn
     }
     private function get(YM_request $request){

@@ -11,7 +11,7 @@
 //框架比引入不可删除
 require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
-//路由
+//路由,从小至大，如果根路由在最上边，且不严格，第二个路由是/admin的话，浏览器输入/admin将会被定义到跟路由
 App::use('/',__routes__.'/index/index.php');//严格示例，只能/到达路由，一般做接口
 App::use('/user',__routes__.'/index/index.php',false);
 //不严格示例，可以到达/users/xxx 路由xxx为泛，可以/users/index.html,/users/login.html,/users/index/login,通过内部$request->params()获取params参数
@@ -24,8 +24,8 @@ App::use('/user',__routes__.'/index/index.php',false);
 
 
 
-//禁止删除
-App::use(null,error(404,"页面不存在"));
+//禁止删除,如果觉得不好看可自行替换，此句话意思是无任何路由定义,但必须保证是404页面，且有明显提示：路由不存在或页面不存在。可以通过YM_Request类获取日志，也就是debug
+App::use(null,error(404,"路由不存在"));
 //禁止删除
 function error($response_code,$result){
     http_response_code ($response_code);
@@ -34,7 +34,13 @@ function error($response_code,$result){
         $debug = 'Error: '.ErrorCode[$response_code].'</br>';
         $debug_arr = debug_backtrace();
         foreach($debug_arr as $key => $val){
-            $debug.= "&nbsp &nbsp &nbsp at ".$val['class'].$val['type'].$val['function']."&nbsp &nbsp(".$val['file'].':'. $val['line'].')</br>';
+            $class = array_key_exists("class",$val) ? $val['class'] : "";
+            $type = array_key_exists("type",$val) ? $val['type'] : "";
+            $function = array_key_exists("function",$val) ? $val['function'] : "";
+            $file = array_key_exists("file",$val) ? $val['file'] : "";
+            $line = array_key_exists("line",$val) ? $val['line'] : "";
+
+            $debug.= "&nbsp &nbsp &nbsp at ".$class.$type.$function."&nbsp &nbsp(".$file.':'. $line.')</br>';
             $details = json_encode($val['args'],JSON_UNESCAPED_UNICODE);
             $details = str_replace("[","",$details);
             $details = str_replace("]","",$details);

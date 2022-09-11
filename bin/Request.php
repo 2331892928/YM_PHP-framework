@@ -58,8 +58,13 @@ class YM_request{
             $debug = 'Error: '.ErrorCode[$response_code].'</br>';
             $debug_arr = debug_backtrace();
             foreach($debug_arr as $key => $val){
-                $debug.= "&nbsp &nbsp &nbsp at ".$val['class'].$val['type'].$val['function']."&nbsp &nbsp(".$val['file'].':'. $val['line'].')</br>';
-                $details = json_encode($val['args'],JSON_UNESCAPED_UNICODE);
+                $class = array_key_exists("class",$val) ? $val['class'] : "";
+                $type = array_key_exists("type",$val) ? $val['type'] : "";
+                $function = array_key_exists("function",$val) ? $val['function'] : "";
+                $file = array_key_exists("file",$val) ? $val['file'] : "";
+                $line = array_key_exists("line",$val) ? $val['line'] : "";
+
+                $debug.= "&nbsp &nbsp &nbsp at ".$class.$type.$function."&nbsp &nbsp(".$file.':'. $line.')</br>';                $details = json_encode($val['args'],JSON_UNESCAPED_UNICODE);
                 $details = str_replace("[","",$details);
                 $details = str_replace("]","",$details);
                 $details = str_replace(",","······",$details);
@@ -71,6 +76,16 @@ class YM_request{
             }
         }
         exit('</br>'.$response_code.'  '.ErrorCode[$response_code].'</br>'.'</br>'.$result.'</br>'.'</br>'.$debug.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV']);
+    }
+    public function statusPage(int $response_code,string $path,array $options=[]){
+
+        if(!file_exists($path)){
+            error(404,'页面文件不存在');
+        }
+        http_response_code ($response_code);
+        $msg = file_get_contents($path);
+        //判断文件类型
+        $this->render($path,$options);
     }
     public function body(){
         //        $postStr = $GLOBALS['HTTP_ROW_POST_DATA'];
@@ -114,7 +129,7 @@ class YM_request{
         ob_clean();
         print_r($msg);
     }
-    public function render(string $path,array $options){
+    public function render(string $path,array $options=[]){
         if(!file_exists($path)){
             error(404,'页面文件不存在');
         }
@@ -148,7 +163,11 @@ class YM_request{
     }
     public function header_cookies(): array
     {
-        $_COOKIE  && $this->SafeFilter($_COOKIE);
+        if(strcmp(PHP_VERSION,"7.4.0")==-1){
+            $_COOKIE    && $this->SafeFilter($_COOKIE);
+        }else{
+            $_COOKIE    && $this->remove_xss($_COOKIE);
+        }
         $cookies = $this->header()['Cookie'];
         $arr_cookies = explode(";",$cookies);
         $arrs_cookies = [];
@@ -160,7 +179,11 @@ class YM_request{
     }
     public function cookies(): array
     {
-        $_COOKIE  && $this->SafeFilter($_COOKIE);
+        if(strcmp(PHP_VERSION,"7.4.0")==-1){
+            $_COOKIE    && $this->SafeFilter($_COOKIE);
+        }else{
+            $_COOKIE    && $this->remove_xss($_COOKIE);
+        }
         return $_COOKIE;
     }
     public function ip(){
@@ -176,6 +199,39 @@ class YM_request{
             $ip = "unknown";
         return ($ip);
     }
+    /**
+     * 获取ipv2自定义版
+     * @param int type 类型，默认0HTTP_CLIENT_IP，1HTTP_X_FORWARDED_FOR，2REMOTE_ADDR，3REMOTE_ADDR，4自定义，需要在参数二给出
+     */
+    public function ipV2(int $type = 0,string $ipServer=NULL){
+        switch ($type){
+            case 0:
+                $ip = getenv("HTTP_CLIENT_IP");
+                break;
+            case 1:
+                $ip = getenv("HTTP_X_FORWARDED_FOR");
+                break;
+            case 2:
+                $ip = getenv("REMOTE_ADDR");
+                break;
+            case 3:
+                $ip = $_SERVER['REMOTE_ADDR'];
+                break;
+            default:
+                $ip = $_SERVER[$ipServer];
+        }
+        return ($ip);
+    }
+
+    /**
+     * 仅限7.4以下版本的php使用，更高请使用：remove_xss,一般普通post普通get普通cookie是自动过滤
+     * @param $string
+     * @param $trim
+     * @param $filter
+     * @param $force
+     * @param $strip
+     * @return array|false|mixed|string|string[]|null
+     */
     public function purge($string,$trim = true,$filter = true,$force = 0, $strip = FALSE) {//递归addslashes  对参数进行净化
         $encode = mb_detect_encoding($string,array("ASCII","UTF-8","GB2312","GBK","BIG5"));
         if($encode != 'UTF-8'){
@@ -204,6 +260,32 @@ class YM_request{
         }
 
         return $string;
+    }
+    /*
+     * 获取日志
+     */
+    public function getLog(){
+        $debug = 'Error: '.ErrorCode[$response_code].'</br>';
+        $debug_arr = debug_backtrace();
+        foreach($debug_arr as $key => $val){
+            $class = array_key_exists("class",$val) ? $val['class'] : "";
+            $type = array_key_exists("type",$val) ? $val['type'] : "";
+            $function = array_key_exists("function",$val) ? $val['function'] : "";
+            $file = array_key_exists("file",$val) ? $val['file'] : "";
+            $line = array_key_exists("line",$val) ? $val['line'] : "";
+
+            $debug.= "&nbsp &nbsp &nbsp at ".$class.$type.$function."&nbsp &nbsp(".$file.':'. $line.')</br>';            $details = json_encode($val['args'],JSON_UNESCAPED_UNICODE);
+            $details = str_replace("[","",$details);
+            $details = str_replace("]","",$details);
+            $details = str_replace(",","······",$details);
+            $details = strip_tags($details);
+            if($details=="{}"){
+                continue;
+            }
+            $debug.="&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp|&nbsp &nbsp &nbsp".$details.'</br>';
+        }
+        $debug .= ErrorCode[$response_code].'</br>'.'</br>'.'</br>'.$debug.'</br>'.'「YM框架——湮灭网络工作室 by AMEN」'.'</br>Dev：'.Config['DEV'];
+        return $debug;
     }
     private function myTrim($str)
 

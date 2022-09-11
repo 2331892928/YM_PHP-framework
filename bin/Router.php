@@ -66,7 +66,8 @@ class App{
         $system_uri = str_replace("?","/",$uri);
         $arr_query = explode('/', $system_uri);
         array_splice($arr_query, 0, 1);
-        $first_query = $arr_query[0];
+
+        $first_query = count($arr_query)==0 ? "" : $arr_query[0];
         if(in_array($first_query,Config['SYSTEM_ROUTES'])){//是系统路由
             $arr_query2 = $arr_query;
             array_splice($arr_query2, 0, 1);
@@ -76,13 +77,16 @@ class App{
             }
             $file = __public__ . implode("/", $arr_query);
             if (!file_exists($file)) {
-                error(404, '静态文件不存在');
+                error(404, '静态文件不存在'.$file);
             }
             $Mime = require __webSite__.'bin/config/Mime.php';
             $msg = file_get_contents($file);
             $fileSuffix = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-            $Mime_type = $Mime[$fileSuffix];
-            if($Mime_type==null){
+
+            if(array_key_exists($fileSuffix,$Mime)){
+                $Mime_type = $Mime[$fileSuffix];
+            }else{
+                $Mime_type = "text/html;";
                 error(405, '静态类型未知');
             }
             header('Content-type: '.$Mime_type);
