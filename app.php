@@ -12,6 +12,12 @@
 require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
 
+//防御CC,若通过配置文件方式传递，请自行研究
+$CC = new CC();
+//$CC->status()返回的是bool，为真则是触发了CC防御，可以自行处理，比如用php只做后端，可以输出json,这里用框架默认防火墙页面
+if($CC->status())exit($CC->getAlert());
+
+
 //自带waf，不用可以注释，也可以自定义waf规则,推荐第二种
 //使用$waf->check()判断自己去处理时，请注意页面必须是500或其他状态码，千万不能是200
 $waf = new Waf();
@@ -23,7 +29,6 @@ $waf = new Waf();
 //}
 
 //第二种
-$waf = new Waf();
 $waf->run();
 
 //第三种
