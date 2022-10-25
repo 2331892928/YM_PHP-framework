@@ -73,6 +73,8 @@ return [
 
     'js' => 'text/javascript',
 
+    'map' => 'application/json',
+
     'css' => 'text/css',
 
     'rtf' => 'text/rtf',
@@ -111,7 +113,7 @@ return [
     'tga' => 'image/x-targa',
 
     'psd' => 'image/vnd.adobe.photoshop',
-    'svg' => 'image/image/svg+xmz',
+    'svg' => 'image/svg+xml',
     'ico' => 'image/x-icon',
     'webp' => 'iimage/webp',
 
