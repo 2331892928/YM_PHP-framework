@@ -25,7 +25,7 @@ class App{
         }
         //浏览器路由1
         $uri = $_SERVER['REQUEST_URI'];
-
+        $uri = urldecode($uri);
 
         //浏览器uri
         $flag_get = false;

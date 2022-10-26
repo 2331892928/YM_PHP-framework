@@ -12,10 +12,10 @@
 require_once __webSite__.'bin/Global.php';
 //框架内置引入完毕
 
-//防御CC,若通过配置文件方式传递，请自行研究
-$CC = new CC();
+//防御CC,采用redis进行持久化储存，时间为24小时。也就是启用防御cc需要redis扩展并传入redis连接参数,若通过配置文件方式传递，请自行研究
+//$CC = new CC();
 //$CC->status()返回的是bool，为真则是触发了CC防御，可以自行处理，比如用php只做后端，可以输出json,这里用框架默认防火墙页面
-if($CC->status())exit($CC->getAlert());
+//if($CC->status())exit($CC->getAlert());
 
 
 //自带waf，不用可以注释，也可以自定义waf规则,推荐第二种
@@ -47,7 +47,6 @@ $waf->run();
 //    die;
 //}
 //waf结束
-
 //路由,从小至大，如果根路由在最上边，且不严格，第二个路由是/admin的话，浏览器输入/admin将会被定义到跟路由
 App::use('/',__routes__.'/index/index.php');//严格示例，只能/到达路由，一般做接口
 App::use('/user',__routes__.'/index/index.php',false);

@@ -8,6 +8,8 @@
  */
 define("ErrorCode", require_once __webSite__ . 'bin/config/ErrorCode.php');
 define("Config", require_once __webSite__ . 'bin/config/Config.php');
+require_once __webSite__.'bin/error/main.php';//错误管理
+
 foreach (Config['PUBLIC_VARIABLE'] as $key => $value) {
     define($key, $value);
 }
