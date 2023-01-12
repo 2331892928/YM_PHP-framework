@@ -7,28 +7,143 @@
  * 湮灭网络工作室
  */
 class YM_request{
-
-
-
-    public function post($name){
-        if(strcmp(PHP_VERSION,"7.4.0")==-1){
-            $_POST    && $this->SafeFilter($_POST);
-        }else{
-            $_POST    && $this->remove_xss($_POST);
+    /**
+     * @return mixed|null 返回提交的json体，contentType: application/json之类的，如需参数校验请用ajaxParms
+     */
+    public function getAjaxParams(){
+        $parms = json_decode(file_get_contents('php://input'),true);
+        if (gettype($parms)=="array"){
+            return $parms;
+        } else {
+            return NULL;
         }
-
-        return $_POST[$name];
-    }
-    public function get($name){
-        if(strcmp(PHP_VERSION,"7.4.0")==-1){
-            $_GET     && $this->SafeFilter($_GET);
-        }else{
-            $_GET     && $this->remove_xss($_GET);
-        }
-
-        return $_GET[$name];
     }
 
+    /**
+     * @param $name string 参数名
+     * @param $isItNecessary boolean 是否必须,不存在返回false
+     * @param $regular string 正则表达式,传入后匹配，不匹配返回NULL，若匹配返回参数
+     * @param $purifiedNot boolean 是否参数净化
+     * @return mixed 返回参数
+     */
+    public function post($name,$isItNecessary=false,$regular=NULL,$purifiedNot=false){
+        //是否必须，不是必须但不存在返回NULL，很合理。必须且不存在返回false
+        if ($isItNecessary){
+            if (!array_key_exists($name,$_POST)){
+                return false;
+            }
+        }else {
+            if (!array_key_exists($name,$_POST)){
+                return NULL;
+            }
+        }
+        //参数净化
+        $string = $_POST[$name];
+        if ($purifiedNot){
+            if(strcmp(PHP_VERSION,"7.4.0")==-1){
+                $_POST    && $this->SafeFilter($_POST);
+                $string = $_POST[$name];
+            }else{
+                $string = $this->remove_xss($_POST)[$name];
+            }
+        }
+        //正则匹配
+        if ($regular!=NULL){
+            if (!preg_match($regular, $string)){
+                return NULL;
+            }
+        }
+
+        return $string;
+    }
+    /**
+     * @param $name string 参数名
+     * @param $isItNecessary boolean 是否必须,不存在返回false
+     * @param $regular string 正则表达式,传入后匹配，不匹配返回NULL，若匹配返回参数
+     * @param $purifiedNot boolean 是否参数净化
+     * @return mixed 返回参数
+     */
+    public function get($name,$isItNecessary=false,$regular=NULL,$purifiedNot=false){
+        //是否必须，不是必须但不存在返回NULL，很合理。必须且不存在返回false
+        if ($isItNecessary){
+            if (!array_key_exists($name,$_GET)){
+                return false;
+            }
+        }else {
+            if (!array_key_exists($name,$_GET)){
+                return NULL;
+            }
+        }
+        //参数净化
+        $string = $_GET[$name];
+        if ($purifiedNot){
+            if(strcmp(PHP_VERSION,"7.4.0")==-1){
+                $_GET    && $this->SafeFilter($_GET);
+                $string = $_GET[$name];
+            }else{
+                $string = $this->remove_xss($_GET)[$name];
+            }
+        }
+        //正则匹配
+        if ($regular!=NULL){
+            if (!preg_match($regular, $string)){
+                return NULL;
+            }
+        }
+
+        return $string;
+    }
+
+    /**
+     * @param $array array
+     * @param $regex array
+     * @return array 校验json参数
+     */
+    public function ajaxParms($array,$regex){
+        $Regex = $this->Regex();
+        $re = [];
+        foreach ($regex as $key=>$value){
+            //是否必须
+            $must = array_key_exists("must", $value) && $value['must'];
+            //是否必须，如果必须整个返回:["test":false]。如果不必须但不存在,复制NULL ["test":NULL]
+            if($must){//必须
+                //是否存在
+                if (!array_key_exists($key,$array)){//不存在
+                    $re[$key] = false;
+                    continue;
+                }else {
+                    $re[$key] = $array[$key];
+                }
+            }else{
+                //是否存在
+                if (!array_key_exists($key,$array)){//不存在
+                    $re[$key] = NULL;
+                    continue;
+                }else {
+                    $re[$key] = $array[$key];
+                }
+            }
+            //参数类型
+            $type = array_key_exists("type", $value) ? $value['type'] : NULL;
+            $pType = gettype($re[$key]);
+            if($type != NULL && $type != $pType){
+                $re[$key] = NULL;
+                continue;
+            }
+            //正则
+            $regular = array_key_exists("regular", $value) ? $value['regular'] : NULL;
+            if ($regular != NULL){
+                if(!preg_match($regular, $re[$key])){
+                    $re[$key] = NULL;
+                }
+            }
+
+        }
+        return $re;
+    }
+    public function Regex(){
+        return new Regex();
+    }
     /**
      * @return false|array
      */
@@ -41,6 +156,7 @@ class YM_request{
         array_splice($arr_query,0,1);
         return $arr_query;
     }
+
     public function request($name){
         return $_REQUEST[$name];
     }

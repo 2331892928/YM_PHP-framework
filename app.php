@@ -20,7 +20,7 @@ require_once __webSite__.'bin/Global.php';
 
 //自带waf，不用可以注释，也可以自定义waf规则,推荐第二种
 //使用$waf->check()判断自己去处理时，请注意页面必须是500或其他状态码，千万不能是200
-$waf = new Waf();
+//$waf = new Waf();
 //第一种
 //if(!$waf->check()){
 //http_response_code (500);
@@ -29,7 +29,7 @@ $waf = new Waf();
 //}
 
 //第二种
-$waf->run();
+//$waf->run();
 
 //第三种
 //$rules = ['\.\./', //禁用包含 ../ 的参数

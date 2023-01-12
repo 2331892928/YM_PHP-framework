@@ -18,6 +18,7 @@ foreach (Config['PUBLIC_VARIABLE'] as $key => $value) {
 //'__images__'=>__webSite__.'public' . '\\images',
 //        '__javascripts__'=>__webSite__.'public' . '\\javascripts',
 //        '__stylesheets__'=>__webSite__.'public' . '\\stylesheets',
+require_once __webSite__.'bin/Regex.php';//规则文件
 require_once __webSite__.'bin/Router.php';//路由文件
 require_once __webSite__.'bin/Map.php';//模仿javamap，已放弃
 require_once __webSite__.'bin/db.class.php';//数据库
